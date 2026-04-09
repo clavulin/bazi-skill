@@ -4,7 +4,7 @@
 
 # 赛博算命 Skill
 
-这是一个基于 [jinchenma94/bazi-skill](https://github.com/jinchenma94/bazi-skill) 的 OpenClaw 本地 fork。
+这是一个基于 [jinchenma94/bazi-skill](https://github.com/jinchenma94/bazi-skill) 的 OpenClaw fork。
 
 在保留原始八字分析 workflow 的基础上，这个版本新增了 `scripts/bazi_cli.py` Python 排盘脚本，用来稳定计算四柱、大运和真太阳时相关上下文，避免纯手算带来的漂移。
 

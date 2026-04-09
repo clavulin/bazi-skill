@@ -9,6 +9,7 @@ description: >
   "帮我看看八字", "我想算八字", "分析八字", "排盘", "bazi", "bazi analysis",
   "fortune telling", "birth chart", "算一卦", "看运势", "命运分析".
   即使只是提到"算命"、"八字"而没有明确说要用skill，也应该使用此skill。
+compatibility: Requires Python 3.11+, lunar_python, and tzdata; run scripts/bazi_cli.py for deterministic chart calculations.
 ---
 
 # 四柱八字命理分析
@@ -27,6 +28,50 @@ description: >
 - `references/classical-texts.md` — 九本经典典籍的核心论命规则摘要
 
 排盘计算时请先读取对应的参考文件，确保计算准确。
+
+## 固定计算脚本
+
+正式排盘时，固定计算优先调用 `scripts/bazi_cli.py`，不要手算四柱和大运。
+
+依赖未安装时先执行：
+
+```bash
+pip install "lunar_python>=1.4.8,<2" "tzdata>=2024.1"
+```
+
+脚本接口：
+
+```bash
+python scripts/bazi_cli.py --input /tmp/bazi_input.json --output /tmp/bazi_output.json
+```
+
+输入 JSON 最低字段：
+
+```json
+{
+  "calendar_type": "solar",
+  "time_input": "1990-05-15 12:00:00",
+  "gender": "male",
+  "location": {
+    "timezone": "Asia/Shanghai",
+    "city": "Dandong"
+  }
+}
+```
+
+补充规则：
+
+- `calendar_type` 支持 `solar` 和 `lunar`
+- `time_input` 可为字符串或对象 `{year, month, day, hour?, minute?, second?}`
+- 农历闰月可传 `is_leap_month: true`
+- 时辰未知时传 `time_unknown: true`，脚本会退化为六字模式并把时柱置空
+- 只知道时辰地支时可传 `hour_branch`
+- 若 `hour_branch` 为 `子`，必须额外传 `zi_hour_segment=night|early`
+- 子时分日规则默认使用 `zi_hour_rule=split-zi`，与本 skill 现有“早晚子时”口径一致
+- 真太阳时修正可传 `use_true_solar_time: true`
+- 若已知经度，优先传 `longitude` 或 `location.longitude`
+- 若未显式传经度，脚本会在联网可用时按 `location.city`、`location.province/state/admin1`、`location.country` 在线 geocode 自动补经度
+- 若用户明确要求真太阳时且出生地存在重名风险，优先追问省份/国家，不要只拿一个模糊城市名直接入盘
 
 ---
 
@@ -128,7 +173,9 @@ description: >
 
 ## 第二阶段：排盘计算
 
-确认信息后，读取 `references/wuxing-tables.md` 和 `references/shichen-table.md`，进行以下计算：
+确认信息后，先读取 `references/wuxing-tables.md` 和 `references/shichen-table.md`，再调用 `scripts/bazi_cli.py` 完成固定计算。
+
+只有在脚本缺少必要参数、或需要人工校验边界条件时，才手动复核以下规则：
 
 ### 1. 年柱
 - 以立春为分界线（非农历正月初一），立春前出生归上一年
@@ -163,10 +210,11 @@ description: >
 
 - 十神以日干（日主）为基准计算
 - 藏干展开各支的本气、中气、余气
+- 若脚本以 `time_unknown: true` 运行，则时柱显示为"未知"
 
 ### 6. 大运排列
 
-读取 `references/dayun-rules.md`，计算：
+读取 `references/dayun-rules.md`，并以脚本输出为主，确认：
 
 1. 确定大运方向：阳年男/阴年女 → 顺排；阴年男/阳年女 → 逆排
 2. 以月柱为基准，按方向依次排列大运干支

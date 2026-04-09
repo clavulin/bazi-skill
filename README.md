@@ -27,7 +27,7 @@ git clone https://github.com/jinchenma94/bazi-skill ~/.claude/skills/bazi
 
 ## 使用
 
-在 Claude Code 中输入以下任意关键词即可触发：
+在 OpenClaw / Claude Code 中输入以下任意关键词即可触发：
 
 `算八字` `看八字` `批八字` `排八字` `四柱` `命盘` `算命` `排盘` `bazi`
 

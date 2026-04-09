@@ -1,10 +1,10 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Claude Code](https://img.shields.io/badge/Claude%20Code-Skill-blueviolet)
-![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-green)
+![AgentSkills](https://img.shields.io/badge/AgentSkills-Standard-green) 
 
 # 赛博算命 Skill
 
-基于 Claude Code 的八字排盘与命理分析工具。通过交互式对话收集出生信息，排出四柱八字，参照九本经典命理典籍进行专业分析。
+基于 Claude Code 的八字排盘与命理分析工具。通过交互式对话收集出生信息，通过Python排出四柱八字，参照九本经典命理典籍进行专业分析。
 
 ## 功能
 
